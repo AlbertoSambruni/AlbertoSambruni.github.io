@@ -1,0 +1,35 @@
+.dispari {
+	background-color: red;
+}
+.pari{
+    background-color: white;
+}
+
+td {
+	height: 50px;
+	width: 50px;
+	border: 1px solid black;
+	text-align: center;
+}
+
+table {
+	border-collapse: collapse;
+}
+body{
+    background-color: gray;
+}
+h1{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    color:purple;
+}
+footer{
+    background-color: darkslategrey;
+    color:bisque;
+}
+div{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
