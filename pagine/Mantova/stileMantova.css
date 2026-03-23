@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    padding: 20px;
+}
+
+.collegamento1 {
+    color: rgb(255, 0, 0);
+}
+
+.collegamento1:hover {
+    color: rgb(255, 238, 0);
+}
+
+.txt1 {
+    color: blue;
+}
+
+.txt2 {
+    color: blue;
+}
+
+.txt3 {
+    color: rgb(255, 0, 242);
+}
+
+.div1 {
+    background-color: rgb(2, 196, 255);
+}
+
+.div2 {
+    background-color: rgb(175, 175, 175);
+}
+
+b {
+    color: rgb(255, 0, 0);
+}
+
+.collegamento2 {
+    color: rgb(94, 0, 172);
+}
+
+.collegamento2:hover {
+    color: rgb(255, 0, 191);
+}

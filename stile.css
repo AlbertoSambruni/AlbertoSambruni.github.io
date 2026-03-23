@@ -1,0 +1,28 @@
+body {
+    background-color: lightblue;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    color: darkblue;
+}
+
+nav {
+    margin-top: 20px;
+}
+
+nav a {
+    display: block;
+    margin: 10px auto;
+    width: 200px;
+    background-color: darkblue;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: blue;
+}
