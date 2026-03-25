@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Esempio: cambiare l'immagine con JavaScript</title>
+    <script>
+        let bottone = document.getElementById("cliccaQui");
+        bottone.addEventListener("click", saluta);
+
+        
+        function cambiaTesto() {
+            document.getElementById("demo").innerHTML = "Hello JavaScript!";
+        }
+        // Funzione che accende la "lampadina"
+        function accendiLuce() {
+            document.getElementById("myImage").src = "images/lampadina_accesa.jpg";
+        }
+
+        // Funzione che spegne la "lampadina"
+        function spegniLuce() {
+            document.getElementById("myImage").src = "images/lampadina_spenta.jpg";
+        }
+    </script>
+</head>
+
+<body>
+
+    <h2>What Can JavaScript Do?</h2>
+
+    <p id="demo">JavaScript can change HTML content.</p>
+
+    <button type="button" onclick="cambiaTesto()">Click Me!</button>
+
+
+    <p>JavaScript can change HTML attribute values.</p>
+
+    <p>In this case JavaScript changes the value of the src (source) attribute of an image.</p>
+
+    <button type="button" onclick="accendiLuce()">Turn on the light</button>
+
+    <img id="myImage" src="images/lampadina_spenta.jpg" style="width:100px">
+
+    <button type="button" onclick="spegniLuce()">Turn off the light</button>
+
+    <button type="button" id="cliccaQui">clicca qui</button>
+
+    <footer>
+        <p>© 2026 - Alberto Sambruni</p>
+        <a href="/albertosambruni.github.io">← Torna alla Home</a>
+    </footer>
+</body>
+</html>
