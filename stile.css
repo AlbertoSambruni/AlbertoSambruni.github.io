@@ -209,3 +209,27 @@ blockquote footer {
     vertical-align: middle;
     border-radius: 2px;
 }
+
+.faqLista {
+    margin-top: 1.5rem;
+}
+
+.faqLista details {
+    border-bottom: 1px solid #dedad4;
+    padding: 0.75rem 0;
+}
+
+.faqLista summary {
+    font-weight: bold;
+    cursor: pointer;
+    color: #1c1c1e;
+}
+
+.faqLista summary:hover {
+    color: #c0392b;
+}
+
+.faqLista details p {
+    margin-top: 0.5rem;
+    color: #444;
+}

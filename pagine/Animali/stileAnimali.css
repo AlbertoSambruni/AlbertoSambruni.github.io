@@ -65,3 +65,24 @@ ul, ol {
     margin-top: 40px;
     font-size: 0.9em;
 }
+
+.grigliGalleria {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.grigliGalleria img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+}
+
+footer {
+    border-top: 1px solid #dedad4;
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+}
