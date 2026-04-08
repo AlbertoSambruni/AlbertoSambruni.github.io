@@ -126,12 +126,17 @@ a:focus-visible {
     padding-top: 1rem;
 }
 
+.griglia-progetti {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
 .card {
     background-color: #ffffff;
     border: 1px solid #dedad4;
     border-radius: 6px;
     padding: 1.75rem;
-    margin-bottom: 1rem;
     border-left: 4px solid #c0392b;
 }
 
@@ -232,4 +237,10 @@ blockquote footer {
 .faqLista details p {
     margin-top: 0.5rem;
     color: #444;
+}
+
+@media (max-width: 40%) {
+    .griglia-progetti {
+        grid-template-columns: 1fr;
+    }
 }
