@@ -6,6 +6,12 @@ function setCookie(nome, valore, giorni){
 
 function getCookie(nome){
     let cookies = document.cookie.split(";");
+    for(let i = 0; i < cookies.length; i++){
+        let c = cookies[i].trim();
+        if(c.startsWith(nome+"="))
+            return decodeURIComponent(c.substring(nome.length+1));
+    }
+    return "";
 }
 
 function salvaDati(){
