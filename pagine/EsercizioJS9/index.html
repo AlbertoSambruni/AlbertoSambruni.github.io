@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrazione Utente Completa</title>
+</head>
+<body>
+
+    <h2>REGISTRAZIONE UTENTE</h2>
+    
+    <form id="formRegistrazione">
+        <label for="cognome">Cognome:</label>
+        <input type="text" id="cognome"><br><br>
+
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome"><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email"><br><br>
+
+        <label for="dataNascita">Data di Nascita:</label>
+        <input type="date" id="dataNascita"><br><br>
+
+        <label>Sesso:</label>
+        <input type="radio" name="sesso" value="M" checked> M
+        <input type="radio" name="sesso" value="F"> F
+        <input type="radio" name="sesso" value="Altro"> Altro<br><br>
+
+        <label for="provincia">Provincia:</label>
+        <select id="provincia">
+            <option value="MI">Milano</option>
+            <option value="RM">Roma</option>
+            <option value="NA">Napoli</option>
+            <option value="TO">Torino</option>
+        </select><br><br>
+
+        <label for="livello">Livello di competenza (1-10):</label>
+        <input type="range" id="livello" min="1" max="10" value="5"><br><br>
+
+        <input type="checkbox" id="contratto"> 
+        <label for="contratto">Accetto i termini del servizio</label><br><br>
+
+        <button type="button" onclick="registrati()">REGISTRATI</button>
+    </form>
+
+    <div id="messaggio" style="margin-top: 20px; white-space: pre-wrap;"></div>
+
+    <script src="script.js"></script>
+    
+    <hr>
+    <footer>
+        <p>Esempio creato per scopi didattici</p>
+        <a href="#">← Torna alla Home</a>
+    </footer>
+
+</body>
+</html>

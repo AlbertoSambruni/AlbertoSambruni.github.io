@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <title>Ordine Prodotti</title>
+    <style>
+        table { border-collapse: collapse; width: auto; }
+        table, th, td { border: 1px solid black; }
+        th, td { padding: 8px; text-align: left; }
+        div { margin-top: 10px; }
+        td p { margin: 0; min-height: 1em; }
+    </style>
+    <script src="script.js"></script>
+</head>
+<body onload="caricaTabella()">
+
+    <div id="carica"></div>
+
+    <button onclick="azzeraModulo()">AZZERA MODULO</button>
+
+    <div>
+        Desidero ricevere notifiche 
+        <input type="radio" name="notifiche" id="si" checked> <label for="si">si</label>
+        <input type="radio" name="notifiche" id="no"> <label for="no">no</label>
+    </div>
+
+    <div>
+        E-mail: <input type="text" id="email">
+    </div>
+
+    <div>
+        Pagamento: 
+        <select id="pagamento">
+            <option value="contanti">contanti</option>
+            <option value="carta di credito">carta di credito</option>
+            <option value="bonifico">bonifico</option>
+        </select>
+    </div>
+
+    <div>
+        <button type="button" onclick="inviaOrdine()">INVIA ORDINE</button>
+    </div>
+    <div>
+        <button type="button" onclick="inviaOrdineNewPag()">INVIA ORDINE NUOVA PAGINA</button>
+    </div>
+
+    <div id="finale" style="margin-top: 2px"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
