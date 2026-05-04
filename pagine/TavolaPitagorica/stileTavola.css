@@ -1,35 +1,26 @@
-.dispari {
-	background-color: red;
-}
-.pari{
-    background-color: white;
-}
+@import '../main.css';
 
-td {
-	height: 50px;
-	width: 50px;
-	border: 1px solid black;
-	text-align: center;
+body {
+    text-align: center;
 }
 
 table {
-	border-collapse: collapse;
+    border-collapse: collapse;
+    margin: auto;
 }
-body{
-    background-color: gray;
+
+td {
+    height: 2.5rem;
+    width: 2.5rem;
+    border: 1px solid var(--colore-bordo);
+    text-align: center;
 }
-h1{
+
+.dispari { background-color: var(--colore-accento); color: #fff; }
+.pari { background-color: #fff; }
+
+div {
     display: flex;
-    justify-content: center; 
-    align-items: center;
-    color:purple;
-}
-footer{
-    background-color: darkslategrey;
-    color:bisque;
-}
-div{
-    display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
 }

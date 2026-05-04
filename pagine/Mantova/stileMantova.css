@@ -1,44 +1,9 @@
-body {
-    margin: 0;
-    padding: 20px;
-}
+@import '../main.css';
 
-.collegamento1 {
-    color: rgb(255, 0, 0);
-}
-
-.collegamento1:hover {
-    color: rgb(255, 238, 0);
-}
-
-.txt1 {
-    color: blue;
-}
-
-.txt2 {
-    color: blue;
-}
-
-.txt3 {
-    color: rgb(255, 0, 242);
-}
-
-.div1 {
-    background-color: rgb(2, 196, 255);
-}
-
-.div2 {
-    background-color: rgb(175, 175, 175);
-}
-
-b {
-    color: rgb(255, 0, 0);
-}
-
-.collegamento2 {
-    color: rgb(94, 0, 172);
-}
-
-.collegamento2:hover {
-    color: rgb(255, 0, 191);
-}
+.collegamento1 { color: var(--colore-accento); }
+.txt1, .txt2 { color: #1a5276; }
+.txt3 { color: var(--colore-muted); }
+.div1 { background-color: #d6eaf8; padding: 0.5rem; border-radius: 4px; }
+.div2 { background-color: #eaecee; padding: 0.5rem; border-radius: 4px; }
+b { color: var(--colore-accento); }
+.collegamento2 { color: #6c3483; }

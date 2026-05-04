@@ -1,88 +1,38 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: white;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
- 
+@import '../main.css';
+
 .header {
-    background-color: #3e7b73;
-    color: white;
-    padding: 40px 20px;
-}
- 
-.galleria {
-    padding: 20px;
-}
- 
-.immagini {
-    justify-content: center;
-    gap: 15px;
-}
- 
-.immagini img {
-    width: 250px;
-    height: 180px;
-    border-radius: 10px;
-}
- 
-.liste {
-    padding: 20px;
-    display: inline-block;
-    text-align: left;
-}
- 
-.sottosezione {
-    margin-bottom: 30px;
-}
- 
-ul, ol {
-    text-align: left;
-}
- 
-.azioni {
-    padding: 30px;
-}
- 
-.btn {
-    background-color: #3e7b73;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    margin: 5px;
-}
- 
-.btn:hover {
-    background-color: #2d5a54;
-}
- 
-.footer {
-    background-color: #333;
-    color: white;
-    padding: 20px;
-    margin-top: 40px;
-    font-size: 0.9em;
+    background-color: var(--colore-testo);
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+    margin: -1.5rem -1.5rem 1.5rem;
 }
 
 .grigliGalleria {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    padding: 2rem;
 }
 
 .grigliGalleria img {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    display: block;
     border-radius: 4px;
 }
 
-footer {
-    border-top: 1px solid #dedad4;
-    padding: 1.5rem 2rem;
-    margin-top: 2rem;
+.btn {
+    display: inline-block;
+    background-color: var(--colore-accento);
+    color: #fff;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn:hover {
+    opacity: 0.85;
+    color: #fff;
 }

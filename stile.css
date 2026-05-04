@@ -80,9 +80,13 @@ a:focus-visible {
     outline-offset: 2px;
     border-radius: 2px;
 }
+
 #nav-principale {
     background-color: var(--colore-nav);
     padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 #nav-principale ul {
