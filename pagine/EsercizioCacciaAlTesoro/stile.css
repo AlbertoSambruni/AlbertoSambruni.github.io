@@ -1,0 +1,39 @@
+@import '../main.css';
+
+/* Nasconde le schermate non attive */
+.schermata        { display: none; }
+.schermata.attiva { display: block; }
+
+/* Nasconde elementi togliuti/aggiunti via JS */
+.nascosto         { display: none !important; }
+.nascosta         { display: none !important; }
+
+/* La barra distanza ha bisogno di un contenitore con altezza */
+.barra-distanza-container {
+  background: #ccc;
+  height: 10px;
+}
+
+.barra-distanza {
+  height: 100%;
+  width: 0%;
+  background: green;
+  transition: width 0.8s;
+}
+
+/* Input affiancato al bottone nel gruppo risposta */
+.input-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* Stats finali affiancate */
+.stats-finali {
+  display: flex;
+  gap: 24px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
