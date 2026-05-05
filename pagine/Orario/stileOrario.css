@@ -13,7 +13,7 @@ caption {
 
 thead th {
     background-color: var(--colore-testo);
-    color: #fff;
+    color: var(--colore-sfondo);
     padding: 0.75rem 1rem;
 }
 
@@ -23,11 +23,48 @@ td {
     text-align: center;
 }
 
+.Orario,
 .orario {
     background-color: var(--colore-bordo);
     font-weight: bold;
+    color: var(--colore-testo);
 }
 
 tbody td:hover {
     background-color: #ffe0dc;
+    color: #1c1c1e;
+}
+
+.tabella {
+    overflow-x: auto;
+}
+
+.tabella table {
+    min-width: 600px;
+}
+
+@media (max-width: 600px) {
+    .pagina {
+        padding: 0 0.5rem;
+    }
+
+    caption {
+        font-size: 1.2rem;
+        padding: 0.75rem 0.5rem;
+    }
+
+    thead th {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    td {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .Orario,
+    .orario {
+        font-size: 0.8rem;
+    }
 }

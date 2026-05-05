@@ -17,7 +17,7 @@ td {
 }
 
 .dispari { background-color: var(--colore-accento); color: #fff; }
-.pari { background-color: #fff; }
+.pari { background-color: #fff; color: #1c1c1e; }
 
 div {
     display: flex;

@@ -2,7 +2,7 @@
 
 .header {
     background-color: var(--colore-testo);
-    color: #fff;
+    color: var(--colore-sfondo);
     padding: 2rem;
     text-align: center;
     margin: -1.5rem -1.5rem 1.5rem;

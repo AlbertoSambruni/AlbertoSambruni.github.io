@@ -94,9 +94,10 @@ a:focus-visible {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 @media (min-width: 600px) {
@@ -288,7 +289,7 @@ blockquote {
 blockquote footer {
     font-style: normal;
     font-size: 0.88rem;
-    color: #999999;
+    color: var(--colore-faq-testo);
     margin-top: 0.5rem;
 }
 .footer-principale {
@@ -346,8 +347,9 @@ blockquote footer {
     margin-top: 0.5rem;
     color: var(--colore-faq-testo);
 }
-@media (prefers-reduced-motion: reduce) {
 
+@media (prefers-reduced-motion: reduce) {
+    
     .hero h1,
     .hero-intro {
         animation: none;

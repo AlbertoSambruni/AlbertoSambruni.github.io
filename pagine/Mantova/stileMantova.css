@@ -1,9 +1,9 @@
 @import '../main.css';
 
 .collegamento1 { color: var(--colore-accento); }
-.txt1, .txt2 { color: #1a5276; }
-.txt3 { color: var(--colore-muted); }
-.div1 { background-color: #d6eaf8; padding: 0.5rem; border-radius: 4px; }
-.div2 { background-color: #eaecee; padding: 0.5rem; border-radius: 4px; }
+.txt1, .txt2 { color: var(--colore-testo); }
+.txt3 { color: var(--colore-testo); }
+.div1 { background-color: #d6eaf8; padding: 0.5rem; border-radius: 4px; color: #1c1c1e; }
+.div2 { background-color: #eaecee; padding: 0.5rem; border-radius: 4px; color: #1c1c1e; }
 b { color: var(--colore-accento); }
 .collegamento2 { color: #6c3483; }
