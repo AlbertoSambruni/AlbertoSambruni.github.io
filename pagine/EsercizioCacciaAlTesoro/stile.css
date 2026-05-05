@@ -1,39 +1,78 @@
 @import '../main.css';
 
-/* Nasconde le schermate non attive */
-.schermata        { display: none; }
-.schermata.attiva { display: block; }
-
-/* Nasconde elementi togliuti/aggiunti via JS */
-.nascosto         { display: none !important; }
-.nascosta         { display: none !important; }
-
-/* La barra distanza ha bisogno di un contenitore con altezza */
-.barra-distanza-container {
-  background: #ccc;
-  height: 10px;
+body {
+    max-width: 650px;
+    margin: 0 auto;
+    border: 1px solid var(--colore-bordo); 
+    padding: 2rem;
+    box-shadow: 4px 4px 0px var(--colore-bordo); 
 }
 
-.barra-distanza {
-  height: 100%;
-  width: 0%;
-  background: green;
-  transition: width 0.8s;
+h1 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--colore-accento);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
-/* Input affiancato al bottone nel gruppo risposta */
-.input-group {
-  display: flex;
-  gap: 8px;
+#pannello-stato {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    border: 1px dashed var(--colore-muted);
+    padding: 0.5rem 1rem;
+    margin-bottom: 2rem;
 }
 
-/* Stats finali affiancate */
-.stats-finali {
-  display: flex;
-  gap: 24px;
+section, div {
+    margin-bottom: 1.5rem;
 }
 
-.stat {
-  display: flex;
-  flex-direction: column;
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--colore-bordo);
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    margin-top: 10px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: transparent;
+    color: var(--colore-accento);
+    border: 1px solid var(--colore-accento);
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    width: 100%;
+}
+
+button:hover {
+    background-color: var(--colore-accento);
+    color: var(--colore-sfondo);
+}
+
+#feedback {
+    font-style: italic;
+    color: var(--colore-accento);
+    margin: 1rem 0;
+}
+
+#log-eventi {
+    font-family: monospace; 
+    font-size: 0.8rem;
+    border: 1px solid var(--colore-bordo);
+    padding: 10px;
+    height: 120px;
+    overflow-y: scroll;
+    background: rgba(0,0,0,0.03);
+}
+
+.nascosto {
+    display: none !important;
 }

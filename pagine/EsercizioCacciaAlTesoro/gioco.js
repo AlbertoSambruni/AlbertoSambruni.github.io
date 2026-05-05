@@ -1,396 +1,191 @@
+// ============================================================
+//  CACCIA AL TESORO DIGITALE — gioco.js (Versione Completa)
+// ============================================================
+
+// --- STATO DEL GIOCO (Modulo 1) ---
+let nomeGiocatore = '';
+let punteggio = 0;
+let vite = 3;
+let partitaTerminata = false;
+let indizioCorrenteIdx = 0;
+let modalitaNoGps = false; // Flag per la modalità senza coordinate
+
+// --- CLASSE INDIZIO (Modulo 2) ---
 class Indizio {
-  constructor(id, testo, emoji, coordinate, soluzione, punti) {
-    this.id          = id;
-    this.testo       = testo;
-    this.emoji       = emoji;
-    this.coordinate  = coordinate;   // { lat, lon }
-    this.soluzione   = soluzione.toUpperCase();
-    this.punti       = punti;
-    this.risolto     = false;
+  constructor(testo, soluzione, punti, coordinate) {
+    this.testo = testo;
+    this.soluzione = soluzione;
+    this.punti = punti;
+    this.coordinate = coordinate; // { lat, lon }
+    this.risolto = false;
   }
 
   verifica(risposta) {
-    return risposta.trim().toUpperCase() === this.soluzione;
+    return risposta.trim().toUpperCase() === this.soluzione.toUpperCase();
   }
 }
 
-
-const INDIZI = [
-  new Indizio(
-    1,
-    '🏛️ Il primo segreto si nasconde dove l\'acqua incontra la pietra antica. Cerca il simbolo inciso sul lato nord del ponte più vecchio della città.',
-    '🌉',
-    { lat: 45.4654, lon: 9.1859 },
-    'PIETRA',
-    100
-  ),
-  new Indizio(
-    2,
-    '📚 Le parole dei saggi ti guidano. Vai dove migliaia di storie vivono in silenzio e cerca lo scaffale con la lettera X.',
-    '📖',
-    { lat: 45.4668, lon: 9.1880 },
-    'BIBLIOTECA',
-    150
-  ),
-  new Indizio(
-    3,
-    '🌳 La natura nasconde i suoi tesori. Nel giardino pubblico, trova l\'albero più alto e cerca ai suoi piedi.',
-    '🌲',
-    { lat: 45.4640, lon: 9.1900 },
-    'RADICE',
-    200
-  ),
-  new Indizio(
-    4,
-    '🔔 Segui il suono delle ore. La torre che scandisce il tempo custodisce l\'ultimo segreto sul suo ingresso.',
-    '🕰️',
-    { lat: 45.4620, lon: 9.1870 },
-    'TEMPO',
-    300
-  ),
+// --- DATABASE INDIZI (Modulo 2) ---
+const indizi = [
+  new Indizio('Cerca sotto la quercia nel parco.', 'QUERCIA', 50, { lat: 45.4654, lon: 9.1859 }),
+  new Indizio('Vicino alla vecchia fontana.', 'FONTANA', 100, { lat: 45.4700, lon: 9.1900 }),
+  new Indizio('Dove il muro diventa rosso.', 'MURO', 150, { lat: 45.4750, lon: 9.1950 })
 ];
 
-const RAGGIO_VICINANZA = 100; // metri — entro questa distanza si sblocca la risposta
+// --- LOGICA DI SUPPORTO (Moduli 1 & 2) ---
 
-//parametri gioco
-const stato = {
-  nomeGiocatore:    '',
-  punteggio:        0,
-  vite:             3,
-  indizioCorrente:  0,
-  partitaTerminata: false,
-  modalitaDemo:     false,   // true se GPS non disponibile → usa distanza simulata
+const logEvento = (messaggio) => {
+  const logDiv = document.querySelector('#log-eventi');
+  const riga = document.createElement('p');
+  riga.textContent = `[${new Date().toLocaleTimeString()}] ${messaggio}`;
+  logDiv.prepend(riga); // Aggiunge in alto per visibilità
 };
 
-
-//roba del dom
-const el = {
-  // Stato header
-  nomeGiocatore:  document.querySelector('#nome-giocatore'),
-  punteggio:      document.querySelector('#punteggio'),
-  vite:           document.querySelector('#vite'),
-  contatore:      document.querySelector('#contatore'),
-
-  // Schermate
-  schermataAvvio: document.querySelector('#schermata-avvio'),
-  schermataGioco: document.querySelector('#schermata-gioco'),
-  schermataFine:  document.querySelector('#schermata-fine'),
-
-  // Avvio
-  inputNome:      document.querySelector('#input-nome'),
-  btnIniziaAvv:   document.querySelector('#btn-inizia'),
-
-  // Indizio
-  cardIndizio:    document.querySelector('#card-indizio'),
-  badgeNumero:    document.querySelector('#badge-numero'),
-  indizioPunti:   document.querySelector('#indizio-punti'),
-  emojiIndizio:   document.querySelector('#emoji-indizio'),
-  testoIndizio:   document.querySelector('#testo-indizio'),
-
-  // Distanza
-  statoDistanza:  document.querySelector('#stato-distanza'),
-  barraDistanza:  document.querySelector('#barra-distanza'),
-  testoDistanza:  document.querySelector('#testo-distanza'),
-
-  // Azioni
-  btnSonoQui:     document.querySelector('#btn-sono-qui'),
-  areaSoluzione:  document.querySelector('#area-soluzione'),
-  inputRisposta:  document.querySelector('#input-risposta'),
-  btnInvia:       document.querySelector('#btn-invia'),
-  feedbackRisp:   document.querySelector('#feedback-risposta'),
-
-  // Log
-  logEventi:      document.querySelector('#log-eventi'),
-
-  // Fine
-  emojiFine:      document.querySelector('#emoji-fine'),
-  titoloFine:     document.querySelector('#titolo-fine'),
-  testoFine:      document.querySelector('#testo-fine'),
-  statPunteggio:  document.querySelector('#stat-punteggio'),
-  statIndizi:     document.querySelector('#stat-indizi'),
-  statVite:       document.querySelector('#stat-vite'),
-  btnRicomincia:  document.querySelector('#btn-ricomincia'),
+const guadagnaPunti = (puntiAttuali, daAggiungere, moltiplicatore = 1) => {
+  return puntiAttuali + (daAggiungere * moltiplicatore);
 };
 
-/** Aggiunge una riga al registro eventi */
-const aggiungiLog = (testo, tipo = 'info') => {
-  const riga = document.createElement('div');
-  riga.className = `log-riga ${tipo}`;
-  const ora = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-  riga.textContent = `[${ora}] ${testo}`;
-  el.logEventi.prepend(riga);
+const calcolaPuntiDisponibili = () => {
+  return indizi
+    .filter(i => !i.risolto)
+    .reduce((acc, curr) => acc + curr.punti, 0);
 };
 
-/** Aggiorna tutti i valori nell'header */
-const aggiornaHeader = () => {
-  el.nomeGiocatore.textContent = stato.nomeGiocatore;
-  el.punteggio.textContent     = stato.punteggio;
-  el.vite.textContent          = '❤️'.repeat(stato.vite);
-  const rimasti = INDIZI.filter(i => !i.risolto).length;
-  el.contatore.textContent     = rimasti;
-};
-
-/** Mostra una schermata, nasconde le altre */
-const mostraSchermata = (id) => {
-  document.querySelectorAll('.schermata').forEach(s => s.classList.remove('attiva'));
-  document.querySelector(`#${id}`).classList.add('attiva');
-};
-
-
-//  MODULO 3 — Geolocation API
-const ottieniPosizione = () =>
-  new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject(new Error('Geolocation non supportata'));
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: true,
-      timeout: 8000,
-    });
-  });
-
-
-//  Calcolo distanza (formula Haversine)
-//  Restituisce la distanza in METRI tra due coordinate GPS
 const calcolaDistanza = (lat1, lon1, lat2, lon2) => {
-  const R    = 6371000; // raggio Terra in metri
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a    =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const R = 6371e3; // Raggio Terra in metri
+  const φ1 = lat1 * Math.PI / 180;
+  const φ2 = lat2 * Math.PI / 180;
+  const Δφ = (lat2 - lat1) * Math.PI / 180;
+  const Δλ = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 };
 
-/** Formatta i metri in modo leggibile */
-const formatDistanza = (metri) =>
-  metri < 1000
-    ? `${Math.round(metri)} m`
-    : `${(metri / 1000).toFixed(1)} km`;
+// --- LOGICA ASINCRONA E GPS (Modulo 3) ---
 
-/** Percentuale di "vicinanza" per la barra (0–100) */
-const calcolaPercentualeVicinanza = (distanza) => {
-  const MAX = 2000; // da questa distanza parte la barra
-  if (distanza <= 0) return 100;
-  if (distanza >= MAX) return 0;
-  return Math.round((1 - distanza / MAX) * 100);
+const attendi = (ms) => new Promise(res => setTimeout(res, ms));
+
+const ottieniPosizione = () => {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) reject("GPS non supportato");
+    navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+  });
 };
 
-
-//  LOGICA DI GIOCO
-
-/** Carica e mostra l'indizio corrente */
-const caricaIndizio = () => {
-  const indizio = INDIZI[stato.indizioCorrente];
-
-  el.badgeNumero.textContent  = `Indizio #${indizio.id}`;
-  el.indizioPunti.textContent = `${indizio.punti} pt`;
-  el.emojiIndizio.textContent = indizio.emoji;
-  el.testoIndizio.textContent = indizio.testo;
-
-  // Nascondi distanza e area risposta
-  el.statoDistanza.classList.add('nascosto');
-  el.areaSoluzione.classList.add('nascosta');
-  el.inputRisposta.value      = '';
-  el.feedbackRisp.textContent = '';
-  el.feedbackRisp.className   = 'feedback';
-  el.cardIndizio.classList.remove('vicino');
-  el.barraDistanza.style.width = '0%';
-
-  el.btnSonoQui.disabled      = false;
-  el.btnSonoQui.textContent   = '📡 Sono qui!';
-
-  aggiornaHeader();
-  aggiungiLog(`Nuovo indizio sbloccato: "${indizio.testo.substring(0, 40)}..."`, 'info');
-};
-
-/** Chiamata quando il giocatore clicca "Sono qui!" */
 const gestisciSonoQui = async () => {
-  el.btnSonoQui.disabled    = true;
-  el.btnSonoQui.textContent = '📡 Rilevamento GPS...';
+  if (partitaTerminata) return;
 
-  const indizio = INDIZI[stato.indizioCorrente];
+  const btn = document.querySelector('#btn-sono-qui');
+  const feedback = document.querySelector('#feedback');
+  btn.disabled = true;
+  feedback.textContent = "Ricerca segnale GPS in corso...";
 
   try {
-    let distanza;
+    if (modalitaNoGps) throw new Error("Modalità manuale attiva");
 
-    if (stato.modalitaDemo) {
-      // Modalità demo: simula avvicinamento progressivo
-      distanza = Math.max(0, 80 + Math.random() * 40); // simula ~80-120m (entro raggio)
-      aggiungiLog('Modalità demo: GPS simulato', 'info');
+    const pos = await ottieniPosizione();
+    const indizio = indizi[indizioCorrenteIdx];
+    const dist = calcolaDistanza(pos.coords.latitude, pos.coords.longitude, indizio.coordinate.lat, indizio.coordinate.lon);
+
+    document.querySelector('#testo-distanza').textContent = `Distanza: ${Math.round(dist)} metri`;
+
+    if (dist < 50) { // Sei entro 50 metri
+      logEvento("Sei arrivato a destinazione!");
+      document.querySelector('#area-risposta').classList.remove('nascosto');
+      feedback.textContent = "Ottimo! Ora inserisci la parola chiave.";
     } else {
-      const posizione = await ottieniPosizione();
-      const { latitude, longitude } = posizione.coords;
-      distanza = calcolaDistanza(
-        latitude, longitude,
-        indizio.coordinate.lat, indizio.coordinate.lon
-      );
-      aggiungiLog(`Posizione rilevata — distanza: ${formatDistanza(distanza)}`, 'info');
+      feedback.textContent = "Sei ancora troppo lontano!";
     }
-
-    // Mostra barra distanza
-    el.statoDistanza.classList.remove('nascosto');
-    const perc = calcolaPercentualeVicinanza(distanza);
-    el.barraDistanza.style.width = `${perc}%`;
-
-    if (distanza <= RAGGIO_VICINANZA) {
-      // 🎉 Sei vicino!
-      el.testoDistanza.textContent = `✅ Sei nel posto giusto! (${formatDistanza(distanza)})`;
-      el.cardIndizio.classList.add('vicino');
-      el.areaSoluzione.classList.remove('nascosta');
-      el.inputRisposta.focus();
-      aggiungiLog(`Sei vicino al punto! Inserisci la parola chiave`, 'successo');
-    } else {
-      // Troppo lontano
-      el.testoDistanza.textContent = `Ancora lontano: ${formatDistanza(distanza)} dal punto`;
-      aggiungiLog(`Troppo lontano (${formatDistanza(distanza)}). Avvicinati!`, 'errore');
-      setTimeout(() => {
-        el.btnSonoQui.disabled    = false;
-        el.btnSonoQui.textContent = '📡 Riprova!';
-      }, 2000);
+  } catch (error) {
+    console.warn("Passaggio a modalità No GPS:", error);
+    if (!modalitaNoGps) {
+      modalitaNoGps = true;
+      logEvento("GPS non disponibile. Modalità 'No GPS' attivata.");
     }
-
-  } catch (err) {
-    // GPS non disponibile → attiva modalità demo
-    console.warn('GPS non disponibile:', err.message);
-    stato.modalitaDemo = true;
-    aggiungiLog('GPS non disponibile → Modalità DEMO attivata', 'info');
-
-    el.statoDistanza.classList.remove('nascosto');
-    el.barraDistanza.style.width = '85%';
-    el.testoDistanza.textContent = '🎮 Modalità demo — GPS non disponibile';
-    el.cardIndizio.classList.add('vicino');
-    el.areaSoluzione.classList.remove('nascosta');
-    el.inputRisposta.focus();
+    feedback.textContent = "Modalità manuale: inserisci la risposta.";
+    document.querySelector('#area-risposta').classList.remove('nascosto');
+    document.querySelector('#testo-distanza').textContent = "Distanza non disponibile (No GPS)";
+  } finally {
+    btn.disabled = false;
   }
 };
 
-/** Chiamata quando si invia la risposta */
-const gestisciRisposta = () => {
-  const risposta = el.inputRisposta.value;
-  const indizio  = INDIZI[stato.indizioCorrente];
+// --- GESTIONE INTERFACCIA ---
 
-  if (!risposta.trim()) return;
+const aggiornaInterfaccia = () => {
+  document.querySelector('#nome-giocatore').textContent = nomeGiocatore;
+  document.querySelector('#punteggio').textContent = punteggio;
+  document.querySelector('#vite').textContent = vite;
+};
+
+const mostraIndizio = () => {
+  const indizio = indizi[indizioCorrenteIdx];
+  if (indizio) {
+    document.querySelector('#testo-indizio').textContent = indizio.testo;
+    document.querySelector('#area-risposta').classList.add('nascosto');
+    document.querySelector('#input-risposta').value = '';
+    logEvento(`Nuovo indizio: ${indizio.testo.substring(0, 20)}...`);
+  }
+};
+
+const gestisciRisposta = () => {
+  const input = document.querySelector('#input-risposta');
+  const risposta = input.value;
+  const indizio = indizi[indizioCorrenteIdx];
 
   if (indizio.verifica(risposta)) {
-    indizio.risolto  = true;
-    stato.punteggio += indizio.punti;
-
-    el.feedbackRisp.textContent = `✅ Corretto! +${indizio.punti} punti`;
-    el.feedbackRisp.className   = 'feedback ok';
-    el.btnInvia.disabled        = true;
-    el.inputRisposta.disabled   = true;
-
-    aggiungiLog(`Indizio #${indizio.id} risolto! +${indizio.punti} pt`, 'successo');
-    aggiornaHeader();
-
-    // Avanza al prossimo indizio dopo 1.5s
-    setTimeout(() => {
-      stato.indizioCorrente++;
-
-      if (stato.indizioCorrente >= INDIZI.length) {
-        terminaPartita(true);
-      } else {
-        caricaIndizio();
-        el.btnInvia.disabled       = false;
-        el.inputRisposta.disabled  = false;
-      }
-    }, 1500);
-
-  } else {
-    stato.vite--;
-    el.feedbackRisp.textContent = `❌ Sbagliato! Vite rimaste: ${stato.vite}`;
-    el.feedbackRisp.className   = 'feedback errore';
-    el.inputRisposta.value      = '';
-
-    aggiungiLog(`Risposta errata! Vite rimaste: ${stato.vite}`, 'errore');
-    aggiornaHeader();
-
-    if (stato.vite <= 0) {
-      setTimeout(() => terminaPartita(false), 1000);
+    indizio.risolto = true;
+    punteggio = guadagnaPunti(punteggio, indizio.punti);
+    logEvento(`Corretto! Guadagnati ${indizio.punti} punti.`);
+    
+    indizioCorrenteIdx++;
+    if (indizioCorrenteIdx < indizi.length) {
+      aggiornaInterfaccia();
+      mostraIndizio();
     } else {
-      setTimeout(() => {
-        el.feedbackRisp.textContent = '';
-        el.inputRisposta.focus();
-      }, 2000);
+      terminaPartita("Hai trovato tutti i tesori!");
+    }
+  } else {
+    vite--;
+    logEvento(`Risposta errata! Vite rimaste: ${vite}`);
+    if (vite <= 0) {
+      terminaPartita("Hai esaurito le vite!");
     }
   }
+  aggiornaInterfaccia();
 };
 
-/** Termina la partita */
-const terminaPartita = (vittoria) => {
-  stato.partitaTerminata = true;
-  const risolti = INDIZI.filter(i => i.risolto).length;
-
-  if (vittoria) {
-    el.emojiFine.textContent  = '🏆';
-    el.titoloFine.textContent = 'Missione Completata!';
-    el.testoFine.textContent  =
-      `Complimenti ${stato.nomeGiocatore}! Hai trovato tutti i tesori e dimostrato di essere un vero esploratore!`;
-  } else {
-    el.emojiFine.textContent  = '💀';
-    el.titoloFine.textContent = 'Game Over!';
-    el.testoFine.textContent  =
-      `Peccato ${stato.nomeGiocatore}! Hai esaurito le vite. Riprova — la caccia al tesoro ti aspetta!`;
-  }
-
-  el.statPunteggio.textContent = stato.punteggio;
-  el.statIndizi.textContent    = risolti;
-  el.statVite.textContent      = stato.vite;
-
-  mostraSchermata('schermata-fine');
+const terminaPartita = (messaggio) => {
+  partitaTerminata = true;
+  document.querySelector('#sezione-gioco').classList.add('nascosto');
+  document.querySelector('#sezione-fine').classList.remove('nascosto');
+  document.querySelector('#messaggio-fine').textContent = messaggio;
+  document.querySelector('#punteggio-finale').textContent = punteggio;
+  
+  const disponibili = calcolaPuntiDisponibili();
+  logEvento(`Fine partita. Punti persi per strada: ${disponibili}`);
 };
 
-/** Resetta tutto e ricomincia */
-const ricomincia = () => {
-  stato.punteggio        = 0;
-  stato.vite             = 3;
-  stato.indizioCorrente  = 0;
-  stato.partitaTerminata = false;
-  stato.nomeGiocatore    = '';
-  stato.modalitaDemo     = false;
+// --- EVENT LISTENERS (Modulo 3) ---
 
-  INDIZI.forEach(i => { i.risolto = false; });
-
-  el.logEventi.innerHTML  = '';
-  el.inputNome.value      = '';
-
-  mostraSchermata('schermata-avvio');
-};
-
-
-// Bottone "Inizia l'avventura"
-el.btnIniziaAvv.addEventListener('click', () => {
-  const nome = el.inputNome.value.trim();
-  if (!nome) {
-    el.inputNome.focus();
-    el.inputNome.style.borderColor = 'var(--colore-errore)';
-    setTimeout(() => { el.inputNome.style.borderColor = ''; }, 1500);
-    return;
-  }
-  stato.nomeGiocatore = nome;
-  mostraSchermata('schermata-gioco');
-  caricaIndizio();
+document.querySelector('#btn-inizia').addEventListener('click', () => {
+  const inputNome = document.querySelector('#input-nome');
+  nomeGiocatore = inputNome.value.trim() || 'Esploratore';
+  
+  document.querySelector('#sezione-avvio').classList.add('nascosto');
+  document.querySelector('#sezione-gioco').classList.remove('nascosto');
+  
+  aggiornaInterfaccia();
+  mostraIndizio();
+  logEvento("Partita avviata.");
 });
 
-// Invio nome con tasto Enter
-el.inputNome.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') el.btnIniziaAvv.click();
+document.querySelector('#btn-sono-qui').addEventListener('click', gestisciSonoQui);
+document.querySelector('#btn-invia').addEventListener('click', gestisciRisposta);
+
+document.querySelector('#btn-ricomincia').addEventListener('click', () => {
+  location.reload(); // Il modo più semplice per resettare tutto lo stato
 });
-
-// Bottone "Sono qui!"
-el.btnSonoQui.addEventListener('click', gestisciSonoQui);
-
-// Bottone "Invia risposta"
-el.btnInvia.addEventListener('click', gestisciRisposta);
-
-// Invio risposta con tasto Enter
-el.inputRisposta.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') gestisciRisposta();
-});
-
-// Bottone "Ricomincia"
-el.btnRicomincia.addEventListener('click', ricomincia);
