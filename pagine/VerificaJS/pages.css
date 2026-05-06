@@ -1,0 +1,54 @@
+@import '../main.css';
+
+h1 {
+    font-size: 1.6rem;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.8rem;
+    border-bottom: 2px solid var(--colore-accento);
+    padding-bottom: 0.6rem;
+    color: var(--colore-testo);
+}
+
+input[type="text"],
+select {
+    font-family: 'Georgia', serif;
+    font-size: 1rem;
+    color: var(--colore-testo);
+    background-color: var(--colore-sfondo);
+    border: 1px solid var(--colore-bordo);
+    border-radius: 2px;
+    padding: 0.55rem 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: var(--colore-accento);
+}
+
+button {
+    font-family: 'Georgia', serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0.65rem 1.6rem;
+    border-radius: 2px;
+    border: none;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+#riepilogo p {
+    border-bottom: 1px solid var(--colore-bordo);
+    padding: 0.6rem 0;
+    margin: 0;
+    font-size: 1rem;
+}
+
+#riepilogo p:last-child {
+    border-bottom: none;
+}
+
