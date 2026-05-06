@@ -1,8 +1,4 @@
-// ============================================================
-//  CACCIA AL TESORO DIGITALE — gioco.js (Versione Completa)
-// ============================================================
-
-// --- STATO DEL GIOCO (Modulo 1) ---
+// --- STATO DEL GIOCO
 let nomeGiocatore = '';
 let punteggio = 0;
 let vite = 3;
@@ -10,7 +6,7 @@ let partitaTerminata = false;
 let indizioCorrenteIdx = 0;
 let modalitaNoGps = false; // Flag per la modalità senza coordinate
 
-// --- CLASSE INDIZIO (Modulo 2) ---
+// --- CLASSE INDIZIO
 class Indizio {
   constructor(testo, soluzione, punti, coordinate) {
     this.testo = testo;
@@ -25,14 +21,14 @@ class Indizio {
   }
 }
 
-// --- DATABASE INDIZI (Modulo 2) ---
+// --- DATABASE INDIZI
 const indizi = [
   new Indizio('Cerca sotto la quercia nel parco.', 'QUERCIA', 50, { lat: 45.4654, lon: 9.1859 }),
   new Indizio('Vicino alla vecchia fontana.', 'FONTANA', 100, { lat: 45.4700, lon: 9.1900 }),
   new Indizio('Dove il muro diventa rosso.', 'MURO', 150, { lat: 45.4750, lon: 9.1950 })
 ];
 
-// --- LOGICA DI SUPPORTO (Moduli 1 & 2) ---
+// --- LOGICA DI SUPPORTO
 
 const logEvento = (messaggio) => {
   const logDiv = document.querySelector('#log-eventi');
@@ -64,7 +60,7 @@ const calcolaDistanza = (lat1, lon1, lat2, lon2) => {
   return R * c;
 };
 
-// --- LOGICA ASINCRONA E GPS (Modulo 3) ---
+// --- LOGICA ASINCRONA E GPS
 
 const attendi = (ms) => new Promise(res => setTimeout(res, ms));
 
@@ -113,7 +109,7 @@ const gestisciSonoQui = async () => {
   }
 };
 
-// --- GESTIONE INTERFACCIA ---
+// --- GESTIONE INTERFACCIA
 
 const aggiornaInterfaccia = () => {
   document.querySelector('#nome-giocatore').textContent = nomeGiocatore;
@@ -169,7 +165,7 @@ const terminaPartita = (messaggio) => {
   logEvento(`Fine partita. Punti persi per strada: ${disponibili}`);
 };
 
-// --- EVENT LISTENERS (Modulo 3) ---
+// --- EVENT LISTENERS
 
 document.querySelector('#btn-inizia').addEventListener('click', () => {
   const inputNome = document.querySelector('#input-nome');
